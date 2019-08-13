@@ -1,0 +1,70 @@
+step 0a: install mysql
+~$ sudo apt-get update
+~$ sudo apt-get install mysql-server
+~$ sudo apt-get install libmysqlclient-dev
+
+step 0b: setup local database
+~$ mysql -u root -p
+Enter password:
+
+mysql>
+CREATE USER IF NOT EXISTS gatechUser@localhost IDENTIFIED BY 'gatech123';
+DROP DATABASE IF EXISTS `cs6400_summer18_team032`;
+SET default_storage_engine=InnoDB;
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE DATABASE IF NOT EXISTS cs6400_summer18_team032
+    DEFAULT CHARACTER SET utf8mb4 
+    DEFAULT COLLATE utf8mb4_unicode_ci;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON *.* TO 'gatechUser'@'localhost';
+GRANT ALL PRIVILEGES ON `gatechuser`.* TO 'gatechUser'@'localhost';
+GRANT ALL PRIVILEGES ON `cs6400_summer18_team032`.* TO 'gatechUser'@'localhost';
+FLUSH PRIVILEGES;
+
+CREATE TABLE `User` (
+  `userId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  PRIMARY KEY (userId),
+  UNIQUE KEY username (username)
+);
+
+INSERT INTO `User` (`username`, `name`, `password`) VALUES
+('djtrump', 'Donald Trump', '13579'),
+('mrpence', 'Mike Pence', '02468');
+
+
+----------------------------------------------------------------------------------
+step 1: installation project environment
+~$ sudo apt-get install python-virtualenv
+~$ mkdir erms
+~$ cd erms
+~/erms$ virtualenv venv
+~/erms$ . venv/bin/activate
+(ven) ~/erms$ pip install Flask
+
+"Successfully installed Flask-1.0.2 Jinja2-2.10 MarkupSafe-1.0 Werkzeug-0.14.1 click-6.7 itsdangerous-0.24"
+
+(ven) ~/erms$ pip install flask-mysql
+
+"Successfully installed PyMySQL-0.9.1 asn1crypto-0.24.0 cffi-1.11.5 cryptography-2.2.2 enum34-1.1.6 flask-mysql-1.4.0 idna-2.7 ipaddress-1.0.22 pycparser-2.18 six-1.11.0"
+
+(ven) ~/erms$ pip install flask-security
+
+"Successfully installed Babel-2.6.0 Flask-BabelEx-0.9.3 Flask-Login-0.4.1 Flask-Mail-0.9.1 Flask-Principal-0.4.0 Flask-WTF-0.14.2 WTForms-2.2.1 blinker-1.4 flask-security-3.0.0 passlib-1.7.1 pytz-2018.5 speaklater-1.3"
+
+(ven) ~/erms$ pip install flask-mysqldb
+"Successfully installed flask-mysqldb-0.2.0 mysqlclient-1.3.13"
+
+----------------------------------------------------------------------------------
+step 2: run the app
+(ven) ~/erms$ export FLASK_APP=app.py
+(ven) ~/erms$ flask run
+
+* Running on http://127.0.0.1:5000/
+-----------------------------------------------------------------
+refs:
+http://flask.pocoo.org/docs/1.0/quickstart/
+https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
